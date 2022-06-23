@@ -4,8 +4,13 @@ const port = process.env.PORT || 5001;
 const call = require("./mailer");
 
 app.get("/scrap", async (req, res) => {
-  const scrap = await call();
-  res.send("done").status(200);
+  try {
+    // const scrap = await call();
+    // res.json(scrap).status(200);
+    res.send("działam do jasnej anielki");
+  } catch (e) {
+    res.send(e);
+  }
 });
 
 app.listen(port, () => {
