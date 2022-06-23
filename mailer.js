@@ -30,10 +30,8 @@ const formatData = (data) => {
   return res;
 };
 
-async function call() {
+module.exports = async function call() {
   const dataFromServer = await data;
   const formatted = formatData(dataFromServer);
   main(formatted).catch(console.error);
-}
-
-call();
+};
