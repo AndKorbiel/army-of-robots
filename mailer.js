@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const data = require("./index");
+const data = require("./scrap");
 require("dotenv").config();
 
 async function main(data) {
