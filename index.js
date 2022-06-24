@@ -4,7 +4,7 @@ const port = process.env.PORT || 5001;
 const call = require("./mailer");
 const cron = require("node-cron");
 
-cron.schedule("37 15 * * *", () => {
+cron.schedule("45 15 * * *", async () => {
   try {
     const scrap = await call();
     res.json(scrap).status(200);
