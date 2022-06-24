@@ -2,14 +2,21 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 5001;
 const call = require("./mailer");
+const cron = require("node-cron");
 
-app.get("/scrap", async (req, res) => {
+cron.schedule("37 15 * * *", () => {
   try {
     const scrap = await call();
     res.json(scrap).status(200);
   } catch (e) {
-    res.send(e);
+    res.send("some kind of error");
+  } finally {
+    res.send("finished");
   }
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).json("Server is up");
 });
 
 app.listen(port, () => {

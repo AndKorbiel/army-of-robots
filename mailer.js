@@ -33,5 +33,6 @@ const formatData = (data) => {
 module.exports = async function call() {
   const dataFromServer = await data;
   const formatted = formatData(dataFromServer);
+  console.log(formatted);
   main(formatted).catch(console.error);
 };
