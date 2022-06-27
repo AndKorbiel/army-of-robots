@@ -10,7 +10,9 @@ async function scrape(pages, names, selectors) {
   for (let i = 0; i < pages.length; i++) {
     await page.goto(pages[i]);
 
-    const element = await page.waitForSelector(selectors[i]);
+    const element = await page.waitForSelector(selectors[i], {
+      timeout: 50000,
+    });
     const text = await page.evaluate((element) => element.textContent, element);
     resp.push(`${names[i]}: ${text}`);
   }
