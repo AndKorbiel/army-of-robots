@@ -8,7 +8,7 @@ async function scrape(pages, names, selectors) {
   let resp = [];
 
   for (let i = 0; i < pages.length; i++) {
-    await page.goto(pages[i]);
+    await page.goto(pages[i], { waitUntil: "networkidle2" });
 
     const element = await page.waitForSelector(selectors[i], {
       timeout: 50000,

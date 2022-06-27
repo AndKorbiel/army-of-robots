@@ -9,9 +9,7 @@ cron.schedule("45 15 * * *", async () => {
     const scrap = await call();
     res.json(scrap).status(200);
   } catch (e) {
-    res.send("some kind of error");
-  } finally {
-    res.send("finished");
+    res.send(e);
   }
 });
 
@@ -24,9 +22,7 @@ app.get("/scrap", async (req, res) => {
     const scrap = await call();
     res.json(scrap).status(200);
   } catch (e) {
-    res.send("some kind of error");
-  } finally {
-    res.send("finished");
+    res.send(e);
   }
 });
 
