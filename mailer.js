@@ -16,8 +16,8 @@ async function main(data) {
   const info = await transporter.sendMail({
     from: `"Twój alert cenowy" <${process.env.USER}>`,
     to: `${process.env.USER}, akorbiel@interia.pl`,
-    subject: "Hello ✔",
-    text: "Hello world?",
+    subject: "Twój codzienny raport od robota ✔",
+    text: "",
     html: data,
   });
 
@@ -34,5 +34,5 @@ module.exports = async function call() {
   const dataFromServer = await data;
   const formatted = formatData(dataFromServer);
   console.log(formatted);
-  main(formatted).catch(console.error);
+  // main(formatted).catch(console.error);
 };
