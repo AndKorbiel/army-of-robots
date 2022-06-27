@@ -19,7 +19,7 @@ app.get("/health", (req, res) => {
   res.status(200).json("Server is up");
 });
 
-app.get("/scrap", (req, res) => {
+app.get("/scrap", async (req, res) => {
   try {
     const scrap = await call();
     res.json(scrap).status(200);
