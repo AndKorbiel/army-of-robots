@@ -1,37 +1,31 @@
-const puppeteer = require("puppeteer");
+const express = require("express");
+const app = express();
+const port = process.env.PORT || 5001;
+const call = require("./mailer");
+const cron = require("node-cron");
 
-async function scrape(pages, names, selectors) {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  let resp = [];
-
-  for (let i = 0; i < pages.length; i++) {
-    await page.goto(pages[i]);
-
-    const element = await page.waitForSelector(selectors[i]);
-    const text = await page.evaluate((element) => element.textContent, element);
-    resp.push(`${names[i]}: ${text}`);
+cron.schedule("45 15 * * *", async () => {
+  try {
+    const scrap = await call();
+    res.json(scrap).status(200);
+  } catch (e) {
+    res.send(e);
   }
-  (await browser).close();
-  return resp;
-}
+});
 
-const data = scrape(
-  [
-    "https://www.e-zegarki.pl/zegarek-meski-tommy-hilfiger-baker-1710450",
-    "https://montres.pl/zegarek/zegarek-meski-tommy-hilfiger-1710450",
-    "https://www.swiss.com.pl/pl/zegarek/1710450",
-    "https://www.otozegarki.pl/1710450-zegarek-meski-tommy-hilfiger-baker-th1710450",
-    "https://www.zegarek.net/zegarki-tommy-hilfiger/zegarek-1710450",
-  ],
-  ["E-zegarki", "Montres.pl", "Swiss.com", "Otozegarki.pl", "Zegarek.net"],
-  [
-    ".price",
-    ".price",
-    "[itemprop='price']",
-    "[itemprop='price']",
-    "[data-product_cart_info_controller-target='finalPrice']",
-  ]
-);
+app.get("/health", (req, res) => {
+  res.status(200).json("Server is up");
+});
 
-module.exports = data;
+app.get("/scrap", async (req, res) => {
+  try {
+    const scrap = await call();
+    res.json(scrap).status(200);
+  } catch (e) {
+    res.send(e);
+  }
+});
+
+app.listen(port, () => {
+  console.log("Server is up");
+});
