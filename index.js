@@ -19,6 +19,17 @@ app.get("/health", (req, res) => {
   res.status(200).json("Server is up");
 });
 
+app.get("/scrap", (req, res) => {
+  try {
+    const scrap = await call();
+    res.json(scrap).status(200);
+  } catch (e) {
+    res.send("some kind of error");
+  } finally {
+    res.send("finished");
+  }
+});
+
 app.listen(port, () => {
   console.log("Server is up");
 });
