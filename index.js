@@ -1,9 +1,15 @@
-const express = require("express");
+import express from "express";
+import bodyParser from "body-parser";
+import cron from "node-cron";
+import { call } from "./server/mailer.js";
+import tasks from "./server/routes/tasks.route.js";
+
 const app = express();
 const port = process.env.PORT || 5001;
-const call = require("./mailer");
-const cron = require("node-cron");
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
+// cron
 cron.schedule("45 15 * * *", async () => {
   try {
     const scrap = await call();
@@ -13,18 +19,8 @@ cron.schedule("45 15 * * *", async () => {
   }
 });
 
-app.get("/health", (req, res) => {
-  res.status(200).json("Server is up");
-});
-
-app.get("/scrap", async (req, res) => {
-  try {
-    const scrap = await call();
-    res.json(scrap).status(200);
-  } catch (e) {
-    res.send(e);
-  }
-});
+// routes
+app.use("/tasks", tasks);
 
 app.listen(port, () => {
   console.log("Server is up");

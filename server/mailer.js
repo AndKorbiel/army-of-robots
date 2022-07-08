@@ -1,8 +1,8 @@
-const nodemailer = require("nodemailer");
-const data = require("./scrap");
-require("dotenv").config();
+import nodemailer from "nodemailer";
+import { scrapedData } from "./scrap.js";
+import "dotenv/config";
 
-async function main(data) {
+async function main(scrapedData) {
   const transporter = nodemailer.createTransport({
     host: "mrandree.nazwa.pl",
     port: 465,
@@ -18,21 +18,21 @@ async function main(data) {
     to: `${process.env.USER}, akorbiel@interia.pl`,
     subject: "Twój codzienny raport od robota ✔",
     text: "",
-    html: data,
+    html: scrapedData,
   });
 
   console.log("Message sent: %s", info.messageId);
 }
 
-const formatData = (data) => {
+const formatData = (scrapedData) => {
   let res = "";
-  data.forEach((el) => (res += `<p>${el}</p>`));
+  scrapedData.forEach((el) => (res += `<p>${el}</p>`));
   return res;
 };
 
-module.exports = async function call() {
-  const dataFromServer = await data;
+export async function call() {
+  const dataFromServer = await scrapedData;
   const formatted = formatData(dataFromServer);
   console.log(formatted);
   main(formatted).catch(console.error);
-};
+}
