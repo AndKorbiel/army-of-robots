@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useFormik } from "formik";
+import styled from "styled-components";
 
 type CustomInputData = {
   title: string;
@@ -7,14 +8,28 @@ type CustomInputData = {
   selector: string;
 };
 
+const Message = styled.p`
+  color: red;
+`;
+
+const CustomForm = styled.form`
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+
+  div {
+    margin: 0 15px;
+  }
+`;
+
 const validate = (values: CustomInputData): void => {
   const errors: any = {};
-  if (!values.title) {
-    errors.title = "Required";
-  } else if (values.title.length < 15) {
-    errors.title = "Must be 15 characters or less";
-  }
 
+  for (let [key, value] of Object.entries(values)) {
+    if (!value || value.length < 3) {
+      errors[key] = "This fields is required";
+    }
+  }
   return errors;
 };
 
@@ -28,10 +43,11 @@ function CustomInput() {
   const formik = useFormik({
     initialValues: initialVal,
     validate,
-    onSubmit: async (values) => {
+    onSubmit: async (values, { resetForm }) => {
       try {
         const res = await axios.post("/tasks", values);
         console.log(res.data);
+        resetForm();
       } catch (e: any) {
         console.log(e.message);
       }
@@ -39,31 +55,45 @@ function CustomInput() {
   });
 
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <input
-        id="title"
-        name="title"
-        placeholder="Page Title"
-        onChange={formik.handleChange}
-        value={formik.values.title}
-      />
-      {formik.errors.title ? <div>{formik.errors.title}</div> : null}
-      <input
-        id="src"
-        name="src"
-        placeholder="Page URL"
-        onChange={formik.handleChange}
-        value={formik.values.src}
-      />
-      <input
-        id="selector"
-        name="selector"
-        placeholder="Target element CSS selector"
-        onChange={formik.handleChange}
-        value={formik.values.selector}
-      />
+    <CustomForm onSubmit={formik.handleSubmit}>
+      <div>
+        <input
+          id="title"
+          name="title"
+          placeholder="Page Title"
+          onChange={formik.handleChange}
+          value={formik.values.title}
+        />
+        {formik.errors.title ? (
+          <Message className="warrning">{formik.errors.title}</Message>
+        ) : null}
+      </div>
+      <div>
+        <input
+          id="src"
+          name="src"
+          placeholder="Page URL"
+          onChange={formik.handleChange}
+          value={formik.values.src}
+        />
+        {formik.errors.src ? (
+          <Message className="warrning">{formik.errors.src}</Message>
+        ) : null}
+      </div>
+      <div>
+        <input
+          id="selector"
+          name="selector"
+          placeholder="Target element CSS selector"
+          onChange={formik.handleChange}
+          value={formik.values.selector}
+        />
+        {formik.errors.selector ? (
+          <Message className="warrning">{formik.errors.selector}</Message>
+        ) : null}
+      </div>
       <button>Submit</button>
-    </form>
+    </CustomForm>
   );
 }
 

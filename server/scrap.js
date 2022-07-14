@@ -1,5 +1,14 @@
 import puppeteer from "puppeteer";
-import { data } from "./data.js";
+import { db } from "../firebase-config.js";
+import { collection, getDocs } from "firebase/firestore";
+
+const tasksCollectionRef = collection(db, "tasks");
+
+const newData = async () => {
+  const dataFromDb = await getDocs(tasksCollectionRef);
+  const data = dataFromDb.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+  return data;
+};
 
 async function scrape(givenData) {
   const browser = await puppeteer.launch({
@@ -24,4 +33,5 @@ async function scrape(givenData) {
   return resp;
 }
 
-export const scrapedData = scrape(data);
+export let scrapedData = [];
+newData().then((data) => (scrapedData = scrape(data)));
