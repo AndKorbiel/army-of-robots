@@ -1,3 +1,8 @@
 .App {
   text-align: center;
 }
+
+.css-hyum1k-MuiToolbar-root a {
+  color: #fff;
+  text-decoration: none;
+}

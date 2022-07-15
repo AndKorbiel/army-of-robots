@@ -25,12 +25,7 @@ function CustomList() {
     getData();
   }, []);
 
-  return (
-    <div>
-      <h2>Custom tasks list</h2>
-      {isLoading ? <TasksList list={tasksData} /> : null}
-    </div>
-  );
+  return <div>{isLoading ? <TasksList list={tasksData} /> : null}</div>;
 }
 
 export default CustomList;

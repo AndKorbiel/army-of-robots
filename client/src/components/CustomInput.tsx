@@ -1,6 +1,9 @@
 import axios from "axios";
 import { useFormik } from "formik";
 import styled from "styled-components";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 
 type CustomInputData = {
   title: string;
@@ -14,12 +17,8 @@ const Message = styled.p`
 
 const CustomForm = styled.form`
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: center;
-
-  div {
-    margin: 0 15px;
-  }
 `;
 
 const validate = (values: CustomInputData): void => {
@@ -56,43 +55,47 @@ function CustomInput() {
 
   return (
     <CustomForm onSubmit={formik.handleSubmit}>
-      <div>
-        <input
+      <Box
+        sx={{
+          "& > :not(style)": { m: 1, width: "25ch" },
+        }}
+      >
+        <TextField
           id="title"
           name="title"
-          placeholder="Page Title"
+          label="Page Title"
           onChange={formik.handleChange}
           value={formik.values.title}
+          helperText={formik.errors.title ? formik.errors.title : null}
+          error={formik.errors.title !== undefined}
         />
-        {formik.errors.title ? (
-          <Message className="warrning">{formik.errors.title}</Message>
-        ) : null}
-      </div>
-      <div>
-        <input
+        <TextField
           id="src"
           name="src"
-          placeholder="Page URL"
+          label="Page URL"
           onChange={formik.handleChange}
           value={formik.values.src}
+          helperText={formik.errors.src ? formik.errors.src : null}
+          error={formik.errors.src !== undefined}
         />
-        {formik.errors.src ? (
-          <Message className="warrning">{formik.errors.src}</Message>
-        ) : null}
-      </div>
-      <div>
-        <input
+        <TextField
           id="selector"
           name="selector"
-          placeholder="Target element CSS selector"
+          label="Target element CSS selector"
           onChange={formik.handleChange}
           value={formik.values.selector}
+          helperText={formik.errors.selector ? formik.errors.selector : null}
+          error={formik.errors.selector !== undefined}
         />
-        {formik.errors.selector ? (
-          <Message className="warrning">{formik.errors.selector}</Message>
-        ) : null}
-      </div>
-      <button>Submit</button>
+        <Button
+          variant="contained"
+          size="large"
+          type="submit"
+          sx={{ height: "55px" }}
+        >
+          Submit
+        </Button>
+      </Box>
     </CustomForm>
   );
 }
