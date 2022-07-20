@@ -14,7 +14,7 @@ app.get("/", async (req, res) => {
 
 app.post("/", async (req, res) => {
   try {
-    const doc = await addDoc(tasksCollectionRef, req.body);
+    await addDoc(tasksCollectionRef, req.body);
     res.status(200).send("New task added");
   } catch (e) {
     res.status(500).send(e.message);
@@ -27,10 +27,10 @@ app.get("/health", (req, res) => {
 
 app.get("/scrap", async (req, res) => {
   try {
-    const scrap = await call();
-    res.json(scrap).status(200);
+    await call();
+    res.status(200).send("Data scraped");
   } catch (e) {
-    res.send(e);
+    res.status(500).send(e);
   }
 });
 

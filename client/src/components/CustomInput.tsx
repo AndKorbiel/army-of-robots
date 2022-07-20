@@ -1,9 +1,12 @@
 import axios from "axios";
 import { useFormik } from "formik";
+import { useState } from "react";
+import { MesseageTypeProps } from "./CustomMessage";
 import styled from "styled-components";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import CustomMessage from "./CustomMessage";
 
 type CustomInputData = {
   title: string;
@@ -11,12 +14,8 @@ type CustomInputData = {
   selector: string;
 };
 
-const Message = styled.p`
-  color: red;
-`;
-
 const CustomForm = styled.form`
-  display: flex;
+  display: grid;
   align-items: center;
   justify-content: center;
 `;
@@ -39,16 +38,33 @@ function CustomInput() {
     selector: "",
   };
 
+  const [alertMessage, setAlertMessage] = useState<MesseageTypeProps>({
+    isVisible: false,
+    type: "error",
+    text: "",
+  });
+
   const formik = useFormik({
     initialValues: initialVal,
     validate,
     onSubmit: async (values, { resetForm }) => {
       try {
         const res = await axios.post("/tasks", values);
-        console.log(res.data);
+        setAlertMessage({
+          isVisible: true,
+          type: "success",
+          text: res.data,
+        });
         resetForm();
+        setTimeout(() => {
+          setAlertMessage({ isVisible: false });
+        }, 3000);
       } catch (e: any) {
-        console.log(e.message);
+        setAlertMessage({
+          isVisible: true,
+          type: "error",
+          text: e.message,
+        });
       }
     },
   });
@@ -96,6 +112,11 @@ function CustomInput() {
           Submit
         </Button>
       </Box>
+      <CustomMessage
+        isVisible={alertMessage.isVisible}
+        type={alertMessage.type}
+        text={alertMessage.text}
+      />
     </CustomForm>
   );
 }
