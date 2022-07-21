@@ -35,9 +35,11 @@ function TopBarDisplay({
           <Link to="/">
             <Button color="inherit">Home</Button>
           </Link>
-          <Link to="add-task">
-            <Button color="inherit">Add new task</Button>
-          </Link>
+          {isLoggedIn ? (
+            <Link to="add-task">
+              <Button color="inherit">Add new task</Button>
+            </Link>
+          ) : null}
           <Button
             color="inherit"
             variant="outlined"

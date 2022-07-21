@@ -1,7 +1,11 @@
 import IntroHeading from "../components/IntroHeading";
 import { useState } from "react";
+import { FormikProps, useFormik } from "formik";
 import { useAppDispatch } from "../state/hooks";
 import { logIn } from "../state/usersSlice";
+import CustomInputDisplay from "../components/CustomInput/CustomInput.display";
+import { CustomFormFields } from "../components/CustomInput/CustomInput";
+import { MesseageTypeProps } from "../components/CustomMessage";
 // mui
 import { Container } from "@mui/material";
 
@@ -10,58 +14,56 @@ type LoginData = {
   userPass: string;
 };
 
+const validate = (values: LoginData): void => {
+  const errors: any = {};
+
+  for (let [key, value] of Object.entries(values)) {
+    if (!value || value.length < 3) {
+      errors[key] = "This fields is required";
+    }
+  }
+  return errors;
+};
+
 function LoginPage() {
   const dispatch = useAppDispatch();
 
-  const [loginData, setLoginData] = useState<LoginData>({
-    userName: "",
-    userPass: "",
+  const [alertMessage, setAlertMessage] = useState<MesseageTypeProps>({
+    isVisible: false,
+    type: "error",
+    text: "",
   });
 
-  const handleChange = (e: any) => {
-    let { userName: name, userPass: pass } = loginData;
-
-    e.target.name === "userName"
-      ? (name = e.target.value)
-      : (pass = e.target.value);
-
-    setLoginData({
-      userName: name,
-      userPass: pass,
-    });
+  const initialVal: LoginData = {
+    userName: "",
+    userPass: "",
   };
 
-  const handleSubmit = async () => {
-    try {
-      dispatch(logIn(loginData));
-    } catch (e: any) {
-      console.log(e);
-    }
-  };
+  const formik = useFormik({
+    initialValues: initialVal,
+    validate,
+    onSubmit: (values) => {
+      dispatch(logIn(values));
+    },
+  });
+
+  const inputFields: Array<CustomFormFields> = [
+    { id: "userName", name: "userName", label: "User name" },
+    { id: "userPass", name: "userPass", label: "User password" },
+  ];
 
   return (
     <div>
       <IntroHeading text="Login" />
       <Container maxWidth="xl">
-        <>
-          <input
-            type="text"
-            placeholder="User name"
-            name="userName"
-            onChange={(e) => handleChange(e)}
-          />
-          <input
-            type="text"
-            placeholder="Password"
-            name="email"
-            onChange={(e) => handleChange(e)}
-          />
-          <button onClick={() => handleSubmit()} type="submit">
-            Submit
-          </button>
-          <p>{loginData.userName}</p>
-          <p>{loginData.userPass}</p>
-        </>
+        <CustomInputDisplay
+          handleSubmit={formik.handleSubmit}
+          handleChange={formik.handleChange}
+          values={formik.values}
+          errors={formik.errors}
+          alertMessage={alertMessage}
+          inputFields={inputFields}
+        />
       </Container>
     </div>
   );

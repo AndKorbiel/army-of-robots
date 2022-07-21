@@ -30,14 +30,17 @@ export const getUserData = createAsyncThunk(
   }
 );
 
-export const logIn = createAsyncThunk("user/login", async (loginData: any) => {
-  try {
-    const res = await axios.post("/users/login", loginData);
-    return res.data;
-  } catch (e) {
-    console.log(e);
+export const logIn = createAsyncThunk(
+  "user/login",
+  async (loginData: any, { rejectWithValue }: any) => {
+    try {
+      const res = await axios.post("/users/login", loginData);
+      return res.data;
+    } catch (e) {
+      return rejectWithValue();
+    }
   }
-});
+);
 
 export const logOut = createAsyncThunk("user/logout", async () => {
   try {

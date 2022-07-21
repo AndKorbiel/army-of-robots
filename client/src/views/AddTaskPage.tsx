@@ -1,5 +1,5 @@
 import { Container } from "@mui/material";
-import CustomInput from "../components/CustomInput";
+import CustomInput from "../components/CustomInput/CustomInput";
 import IntroHeading from "../components/IntroHeading";
 
 function AddTaskPage() {
